@@ -4,7 +4,7 @@ import axios from 'axios';
 import './search.css';
 import ShowAllPostsButton from './ShowAllPostsButton';
 
-const Posts= (props) =>{
+const MyPosts= (props) =>{
     const [posts, setPosts] = useState([]);  // To store fetched users
     const [displayedPosts, setDisplayedPosts] = useState([]);
     const [postTitle, setPostTitle] = useState(''); // Title input state
@@ -54,18 +54,10 @@ const Posts= (props) =>{
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                // Prepare followers list
-                const friendResponse = await axios.get(`${BASE_URL}/following/following/`, {
-                    withCredentials: true,
-                });
-                const followersList = friendResponse.data.friends.join(',');
-
-                // Fetch ALL articles at once without pagination
+                // 只获取当前用户的帖子，不包括关注的用户
                 const response = await axios.get(`${BASE_URL}/articles/articles/`, {
                     params: {
-                        includeFollowers: true,
-                        limit: 100, // Set a high limit to get all posts
-                        followers: followersList
+                        author: props.user  // 只查询当前用户的帖子
                     },
                     withCredentials: true,
                 });
@@ -127,9 +119,11 @@ const Posts= (props) =>{
             }
         };
 
-        // Only fetch posts if user is available
-        fetchPosts();
-    }, [props.friends, props.user]);
+        // 只要有用户信息就获取帖子
+        if (props.user) {
+            fetchPosts();
+        }
+    }, [props.user]); // 依赖项改为仅 props.user，不需要 props.friends
 
     // Pagination handlers
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -467,18 +461,10 @@ const Posts= (props) =>{
             // 重新获取帖子数据
             const fetchPosts = async () => {
                 try {
-                    // Prepare followers list
-                    const friendResponse = await axios.get(`${BASE_URL}/following/following/`, {
-                        withCredentials: true,
-                    });
-                    const followersList = friendResponse.data.friends.join(',');
-
-                    // Fetch ALL articles at once without pagination
+                    // 只获取当前用户的帖子
                     const response = await axios.get(`${BASE_URL}/articles/articles/`, {
                         params: {
-                            includeFollowers: true,
-                            limit: 100, // Set a high limit to get all posts
-                            followers: followersList
+                            author: props.user // 只查询当前用户的帖子
                         },
                         withCredentials: true,
                     });
@@ -497,7 +483,7 @@ const Posts= (props) =>{
                             );
                             // 假设返回数据中包含 avatarUrl 字段
                             avatarUrl = avatarResponse.data.url;
-                    
+                
                           } catch (error) {
                             console.error(`获取用户 ${author} 头像失败:`, error);
                             // 可以设置一个默认头像
@@ -543,7 +529,7 @@ const Posts= (props) =>{
 
             fetchPosts();
         }
-    }, [props.postAdded]);
+    }, [props.postAdded, props.user]);
 
     // 添加删除帖子的函数
     const handleDeletePost = async (postId) => {
@@ -570,8 +556,18 @@ const Posts= (props) =>{
     };
 
     return <main className="flex-1 p-4">
+        {/* 页面标题和返回按钮 */}
+        <div className="my-posts-header">
+            <button 
+                className="back-button"
+                onClick={() => props.setActiveComponent && props.setActiveComponent('Posts')}
+                title="返回所有帖子"
+            >
+                <i className="fas fa-arrow-left"></i>
+            </button>
+            <h2>我的帖子</h2>
+        </div>
         
-
         {/* Search Bar */}
         <div className="search-container" ref={searchRef}>
             <div className="d-flex align-items-center">
@@ -618,76 +614,91 @@ const Posts= (props) =>{
                 </div>
             )}
         </div>
-        <div className="posts-grid">
-            {currentPosts.map((post, index) => (
-                <div key={post.id} className={`post-card ${!post.imageUrl ? 'text-only-post' : ''}`}>
-                    <div className="post-header">
-                        <div className="post-user-info">
-                            <div className="post-avatar">
-                                {post.avatar ? (
-                                    <img src={post.avatar} alt={post.author} />
-                                ) : (
-                                    <div className="post-avatar-placeholder">
-                                        {post.author.charAt(0).toUpperCase()}
-                                    </div>
+        
+        {/* 帖子列表 */}
+        {currentPosts.length > 0 ? (
+            <div className="posts-grid">
+                {currentPosts.map((post, index) => (
+                    <div key={post.id} className={`post-card ${!post.imageUrl ? 'text-only-post' : ''}`}>
+                        <div className="post-header">
+                            <div className="post-user-info">
+                                <div className="post-avatar">
+                                    {post.avatar ? (
+                                        <img src={post.avatar} alt={post.author} />
+                                    ) : (
+                                        <div className="post-avatar-placeholder">
+                                            {post.author.charAt(0).toUpperCase()}
+                                        </div>
+                                    )}
+                                </div>
+                                <span className="post-username">{post.author}</span>
+                            </div>
+                            <div className="post-actions-menu">
+                                <div className="post-timestamp">{post.timestamp}</div>
+                                {post.author === props.user && (
+                                    <button 
+                                        className="post-delete-button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeletePost(post.id);
+                                        }}
+                                        title="删除帖子"
+                                    >
+                                        <i className="fas fa-trash-alt"></i>
+                                    </button>
                                 )}
                             </div>
-                            <span className="post-username">{post.author}</span>
                         </div>
-                        <div className="post-actions-menu">
-                            <div className="post-timestamp">{post.timestamp}</div>
-                            {post.author === props.user && (
-                                <button 
-                                    className="post-delete-button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDeletePost(post.id);
-                                    }}
-                                    title="删除帖子"
-                                >
-                                    <i className="fas fa-trash-alt"></i>
-                                </button>
-                            )}
+                        
+                        {post.imageUrl ? (
+                            <div className="post-image-container">
+                                <img
+                                    src={post.imageUrl}
+                                    alt={`Post ${index + 1}`}
+                                    className="post-image"
+                                />
+                            </div>
+                        ) : (
+                            <div className="text-post-container">
+                                <h3 className="post-title-featured">{post.title}</h3>
+                            </div>
+                        )}
+                        
+                        <div className="post-details">
+                            {post.imageUrl && <h3 className="post-title">{post.title}</h3>}
+                            <p className="post-body">{post.text}</p>
                         </div>
-                    </div>
-                    
-                    {post.imageUrl ? (
-                        <div className="post-image-container">
-                            <img
-                                src={post.imageUrl}
-                                alt={`Post ${index + 1}`}
-                                className="post-image"
-                            />
-                        </div>
-                    ) : (
-                        <div className="text-post-container">
-                            <h3 className="post-title-featured">{post.title}</h3>
-                        </div>
-                    )}
-                    
-                    <div className="post-details">
-                        {post.imageUrl && <h3 className="post-title">{post.title}</h3>}
-                        <p className="post-body">{post.text}</p>
-                    </div>
 
-                    {/* 点赞和评论按钮 */}
-                    <div className="post-actions">
-                        <button 
-                            className={`post-action-button like-button ${likedPosts[post.id] ? 'active' : ''}`}
-                            onClick={() => handleLike(post.id)}
-                        >
-                            <i className={likedPosts[post.id] ? 'fas fa-heart' : 'far fa-heart'}></i>
-                        </button>
-                        <button 
-                            className="post-action-button comment-button"
-                            onClick={() => handleShowComments(post.id)}
-                        >
-                            <i className="far fa-comment"></i>
-                        </button>
+                        {/* 点赞和评论按钮 */}
+                        <div className="post-actions">
+                            <button 
+                                className={`post-action-button like-button ${likedPosts[post.id] ? 'active' : ''}`}
+                                onClick={() => handleLike(post.id)}
+                            >
+                                <i className={likedPosts[post.id] ? 'fas fa-heart' : 'far fa-heart'}></i>
+                            </button>
+                            <button 
+                                className="post-action-button comment-button"
+                                onClick={() => handleShowComments(post.id)}
+                            >
+                                <i className="far fa-comment"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            ))}
-        </div>
+                ))}
+            </div>
+        ) : (
+            <div className="no-posts-message">
+                <i className="far fa-frown"></i>
+                <p>你还没有发布任何帖子</p>
+                <button 
+                    className="create-post-button"
+                    onClick={() => props.toggleModal && props.toggleModal('Add Post')}
+                >
+                    <i className="fas fa-plus-circle"></i> 创建帖子
+                </button>
+            </div>
+        )}
 
         {/* 评论模态框 */}
         {showComments && (
@@ -896,4 +907,4 @@ const Posts= (props) =>{
     </main>
 }
 
-export default Posts;
+export default MyPosts;

@@ -1,0 +1,355 @@
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #efefef;
+}
+
+.profile-header h2 {
+    margin: 0 0 0 16px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.profile-content-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+}
+
+.profile-avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 200px;
+}
+
+.profile-avatar {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #efefef;
+    color: #8e8e8e;
+    font-size: 64px;
+    font-weight: bold;
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    cursor: pointer;
+    color: white;
+}
+
+.avatar-overlay i {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.profile-avatar:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.avatar-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.profile-username {
+    font-size: 20px;
+    font-weight: 600;
+    color: #262626;
+    margin: 8px 0;
+}
+
+.profile-info-section {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 600px;
+}
+
+.profile-info-item {
+    padding: 16px 20px;
+    border-bottom: 1px solid #efefef;
+}
+
+.profile-info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: 14px;
+    color: #8e8e8e;
+    margin-bottom: 8px;
+}
+
+.info-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    color: #262626;
+}
+
+.info-edit {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-edit input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-button, .save-button, .cancel-button {
+    background: none;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.edit-button {
+    color: #8e8e8e;
+}
+
+.edit-button:hover {
+    background-color: #f6f6f6;
+    color: #0095f6;
+}
+
+.save-button {
+    color: #0095f6;
+}
+
+.save-button:hover {
+    background-color: #e8f4fd;
+}
+
+.cancel-button {
+    color: #ed4956;
+}
+
+.cancel-button:hover {
+    background-color: #fcefef;
+}
+
+/* 密码修改相关样式 */
+.password-edit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 10px 0;
+}
+
+.password-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.password-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.password-input-group label {
+    font-size: 14px;
+    color: #8e8e8e;
+}
+
+.password-input-group input {
+    padding: 8px 12px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.password-error {
+    color: #ed4956;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.password-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.password-actions button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* 日期输入样式 */
+input[type="date"] {
+    padding: 8px 12px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+/* 响应式样式调整 */
+@media (min-width: 768px) {
+    .profile-content {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    
+    .profile-avatar-section {
+        width: 200px;
+        margin-right: 30px;
+        margin-bottom: 0;
+    }
+    
+    .profile-info-section {
+        flex: 1;
+    }
+}
+
+.profile-error {
+    color: #ed4956;
+    background-color: #fdeaea;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.profile-field {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #efefef;
+    padding-bottom: 15px;
+}
+
+.profile-field label {
+    display: block;
+    font-size: 14px;
+    color: #8e8e8e;
+    margin-bottom: 6px;
+}
+
+.profile-field p {
+    margin: 0;
+    font-size: 16px;
+    color: #262626;
+}
+
+.profile-field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+}
+
+.profile-field input:focus {
+    border-color: #0095f6;
+    outline: none;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.profile-action-button {
+    padding: 8px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+@media (max-width: 600px) {
+    .profile-container {
+        padding: 10px;
+    }
+    
+    .profile-content {
+        padding: 20px;
+    }
+    
+    .profile-avatar-section {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .profile-username {
+        font-size: 20px;
+    }
+} 

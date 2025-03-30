@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import app from './firebaseConfig';
 import Main from './main/main'
 import Register from "./landing/registration";
+import Login from "./landing/login";
 import Profile from "./profile/profile";
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -16,7 +18,8 @@ root.render(
       <Router>
           <Routes>
 
-              <Route exact path="/" element={<Register/>}/>
+              <Route exact path="/register" element={<Register/>}/> 
+              <Route exact path="/" element={<Login/>}/>
               <Route exact path="/main" element={<Main />}/>
               <Route exact path="/profile" element={<Profile />}/>
               {/*<Route path="/players" element={<Players />} />*/}
